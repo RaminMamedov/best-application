@@ -1,29 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import { clearUser } from '../../userSlice/userSlice';
 import s from './Layout.module.css';
-import {useAppDispatch, useAppSelector} from "../../store";
 import {selectIsAuthenticated} from "../../selectors/userSelectors";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
 
 const Layout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const handleLogOut = () => {
+        dispatch(clearUser());
+        navigate('/login');
+    };
 
     return (
-        <div>
+        <div className={s.layoutContainer}>
             <header className={s.header}>
-                <h1>
-                    <Link to="/">Best Application</Link>
+                <h1 className={s.title}>
+                    <Link to="/" className={s.homeLink}>Best Application</Link>
                 </h1>
                 {isAuthenticated ? (
-                    <div>
-                        <Link to="/login" onClick={() => dispatch(clearUser())}><button>Log Out</button></Link>
-                    </div>
+                    <button className={s.authButton} onClick={handleLogOut}>Log Out</button>
                 ) : (
-                    <Link to="/login"><button>Sign In</button></Link>
+                    <button className={s.authButton} onClick={() => navigate('/login')}>Sign In</button>
                 )}
             </header>
-            <main>
+            <main className={s.mainContent}>
                 {children}
             </main>
         </div>

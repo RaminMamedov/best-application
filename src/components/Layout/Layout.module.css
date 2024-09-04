@@ -1,3 +1,27 @@
+.authButton {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    transition: background-color 0.3s ease;
+}
+
+.authButton:hover {
+    background-color: #e0e0e0;
+}
+
+.homeLink {
+    text-decoration: none;
+    color: inherit;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -7,27 +31,23 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.header h1 {
+.title {
     margin: 0;
     font-size: 24px;
 }
 
-.header h1 a {
-    text-decoration: none;
-    color: inherit;
+@media (max-width: 375px) {
+    .title {
+        font-size: 14px;
+    }
 }
 
-.header button {
-    padding: 8px 16px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #f5f5f5;
-    border: none;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+.layoutContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.header button:hover {
-    background-color: #e0e0e0;
+.mainContent {
+    padding: 20px;
 }

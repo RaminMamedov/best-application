@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { useGetPostByIdQuery, useGetCommentsByPostIdQuery } from '../../baseApi/api';
 import s from './PostDetail.module.css';
@@ -24,6 +24,10 @@ const PostDetail: React.FC = () => {
         skip: !postId,
     });
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [postId]);
+
     if (!postId) {
         return <Navigate to="/" />;
     }
@@ -35,13 +39,13 @@ const PostDetail: React.FC = () => {
 
     return (
         <div className={s.postDetail}>
-            <h2>{post?.title}</h2>
-            <p>{post?.body}</p>
-            <h3>Comments</h3>
+            <h2 className={s.postDetailTitle}>{post?.title}</h2>
+            <p className={s.postDetailBody}>{post?.body}</p>
+            <h3 className={s.postDetailH3}>Comments</h3>
             {comments?.map((comment: Comment) => (
                 <div key={comment.id} className={s.comment}>
-                    <p><strong>{comment.email}</strong></p>
-                    <p>{comment.body}</p>
+                    <p className={s.commentP}><strong className={s.commentStrong}>{comment.email}</strong></p>
+                    <p className={s.commentP}>{comment.body}</p>
                 </div>
             ))}
         </div>

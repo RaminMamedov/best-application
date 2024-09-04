@@ -21,33 +21,34 @@ const UserSchema = z.object({
     name: z.string(),
 });
 
+type Post = z.infer<typeof PostSchema>;
+type Comment = z.infer<typeof CommentSchema>;
+type User = z.infer<typeof UserSchema>;
+
+
 export const baseApi = createApi({
     reducerPath: 'baseApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'https://jsonplaceholder.typicode.com/' }),
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
     tagTypes: ["Posts", "Comments", "Users"],
     endpoints: (builder) => ({
-        getPosts: builder.query<any[], { page: number }>({
+        getPosts: builder.query<Post[], { page: number }>({
             query: ({ page }) => `posts?_page=${page}&_limit=12`,
             transformResponse: (response: any) => PostSchema.array().parse(response),
-            providesTags: (result) =>
-                result
-                    ? [
-                        ...result.map(({ id }) => ({ type: "Posts" as const, id })),
-                        { type: "Posts", id: "PARTIAL-LIST" },
-                    ]
-                    : [{ type: "Posts", id: "PARTIAL-LIST" }],
+            providesTags: (result, error, { page }) => [{ type: "Posts", id: page }],
         }),
-        getPostById: builder.query<any, number>({
+        getPostById: builder.query<Post, number>({
             query: (id) => `posts/${id}`,
             transformResponse: (response: any) => PostSchema.parse(response),
             providesTags: (result, error, id) => [{ type: "Posts", id }],
         }),
-        getCommentsByPostId: builder.query<any[], number>({
+        getCommentsByPostId: builder.query<Comment[], number>({
             query: (postId) => `comments?postId=${postId}`,
             transformResponse: (response: any) => CommentSchema.array().parse(response),
             providesTags: (result, error, postId) => [{ type: "Comments", id: postId }],
         }),
-        getUserByUsername: builder.query<any[], string>({
+        getUserByUsername: builder.query<User[], string>({
             query: (username) => `users?username=${username}`,
             transformResponse: (response: any) => UserSchema.array().parse(response),
             providesTags: (result, error, username) => [{ type: "Users", id: username }],
@@ -56,7 +57,7 @@ export const baseApi = createApi({
 });
 
 export const {
-    useLazyGetPostsQuery,
+    useGetPostsQuery,
     useGetPostByIdQuery,
     useGetCommentsByPostIdQuery,
     useLazyGetUserByUsernameQuery

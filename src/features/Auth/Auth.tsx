@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Auth.module.css';
-import {useAppDispatch, useAppSelector} from "../../store";
 import {selectIsAuthenticated} from "../../selectors/userSelectors";
 import Loader from "../../components/Loader/Loader";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
 
 const Auth: React.FC = () => {
     const [inputUsername, setInputUsername] = useState('');
@@ -65,7 +65,10 @@ const Auth: React.FC = () => {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputUsername(e.target.value);
+        const newValue = e.target.value;
+        if (newValue.length <= 20 && !newValue.includes(" ")) {
+            setInputUsername(newValue);
+        }
     };
 
     if (isLoading) return <Loader />;
@@ -84,9 +87,10 @@ const Auth: React.FC = () => {
                         </>
                     ) : (
                         <>
-                            <h2>Sign In</h2>
-                            <form onSubmit={handleSubmit}>
+                            <h2 className={s.signInButton}>Sign In</h2>
+                            <form className={s.authForm} onSubmit={handleSubmit}>
                                 <input
+                                    className={s.authInput}
                                     type="text"
                                     value={inputUsername}
                                     onChange={handleChange}

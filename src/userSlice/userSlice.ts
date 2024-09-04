@@ -14,9 +14,9 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUser: (state, action: PayloadAction<string>) => {
+        setUser: (state, action: PayloadAction<string | null>) => {
             state.username = action.payload;
-            state.isAuthenticated = true;
+            state.isAuthenticated = action.payload !== null;
         },
         clearUser: (state) => {
             state.username = null;

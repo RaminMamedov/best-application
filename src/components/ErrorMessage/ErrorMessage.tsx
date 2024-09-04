@@ -31,7 +31,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({ error, context }) =>
 
     return (
         <div className={s.errorContainer}>
-            <p>{errorMessage}</p>
+            <p className={s.errorMessage}>{errorMessage}</p>
         </div>
     );
 };
