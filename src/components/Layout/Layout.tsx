@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import { clearUser } from '../../userSlice/userSlice';
+import { clearUser } from '../../slice/userSlice';
 import s from './Layout.module.css';
 import {selectIsAuthenticated} from "../../selectors/userSelectors";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";

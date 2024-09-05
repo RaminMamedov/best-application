@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useLazyGetUserByUsernameQuery } from '../../baseApi/api';
-import { setUser, clearUser } from '../../userSlice/userSlice';
+import { setUser, clearUser } from '../../slice/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

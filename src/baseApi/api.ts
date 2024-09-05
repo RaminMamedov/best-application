@@ -21,7 +21,7 @@ const UserSchema = z.object({
     name: z.string(),
 });
 
-type Post = z.infer<typeof PostSchema>;
+export type Posts = z.infer<typeof PostSchema>;
 type Comment = z.infer<typeof CommentSchema>;
 type User = z.infer<typeof UserSchema>;
 
@@ -33,28 +33,39 @@ export const baseApi = createApi({
     refetchOnReconnect: true,
     tagTypes: ["Posts", "Comments", "Users"],
     endpoints: (builder) => ({
-        getPosts: builder.query<Post[], { page: number }>({
+        getPosts: builder.query<Posts[], { page: number }>({
             query: ({ page }) => `posts?_page=${page}&_limit=12`,
-            transformResponse: (response: any) => PostSchema.array().parse(response),
+            transformResponse: (response: Posts[]) => PostSchema.array().parse(response),
             providesTags: (result, error, { page }) => [{ type: "Posts", id: page }],
+            serializeQueryArgs: ({ endpointName }) => {
+                return endpointName
+            },
+            merge: (currentCache, newItems) => {
+                currentCache.push(...newItems)
+            },
+            forceRefetch({ currentArg, previousArg }) {
+                return currentArg?.page !== previousArg?.page
+            },
         }),
-        getPostById: builder.query<Post, number>({
+        getPostById: builder.query<Posts, number>({
             query: (id) => `posts/${id}`,
-            transformResponse: (response: any) => PostSchema.parse(response),
+            transformResponse: (response: Posts) => PostSchema.parse(response),
             providesTags: (result, error, id) => [{ type: "Posts", id }],
         }),
         getCommentsByPostId: builder.query<Comment[], number>({
             query: (postId) => `comments?postId=${postId}`,
-            transformResponse: (response: any) => CommentSchema.array().parse(response),
+            transformResponse: (response: Comment[]) => CommentSchema.array().parse(response),
             providesTags: (result, error, postId) => [{ type: "Comments", id: postId }],
         }),
         getUserByUsername: builder.query<User[], string>({
             query: (username) => `users?username=${username}`,
-            transformResponse: (response: any) => UserSchema.array().parse(response),
+            transformResponse: (response: User[]) => UserSchema.array().parse(response),
             providesTags: (result, error, username) => [{ type: "Users", id: username }],
         }),
     }),
 });
+
+
 
 export const {
     useGetPostsQuery,

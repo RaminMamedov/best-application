@@ -1,7 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { baseApi } from '../baseApi/api';
-import userReducer from '../userSlice/userSlice';
+import userReducer from '../slice/userSlice';
 
 export const store = configureStore({
     reducer: {
@@ -14,3 +14,4 @@ export const store = configureStore({
 
 setupListeners(store.dispatch);
 
+export type Store = ReturnType<typeof store.getState>
