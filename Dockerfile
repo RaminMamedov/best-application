@@ -26,7 +26,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Копирование собранного проекта в директорию nginx
-COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Открытие порта 80 для доступа к приложению
 EXPOSE 80
