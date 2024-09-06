@@ -1,35 +1,32 @@
-# Выбор базового образа
+# Выбор базового образа для сборки React приложения
 FROM node:16-alpine as build
 
-# Установка рабочей директории в контейнере
+# Установка рабочей директории
 WORKDIR /app
 
-# Копирование файлов package.json и package-lock.json (или yarn.lock)
+# Копирование package.json и package-lock.json (если есть)
 COPY package*.json ./
-# Если используете yarn, добавьте:
-# COPY yarn.lock ./
 
 # Установка зависимостей
 RUN npm install
-# Или если используете yarn, то:
-# RUN yarn install
 
 # Копирование остальных файлов проекта
 COPY . .
 
-# Сборка приложения
+# Сборка React приложения
 RUN npm run build
-# Или если используете yarn, то:
-# RUN yarn build
 
-# Финальный этап - nginx используется для раздачи статики
+# Финальный этап - использование Nginx для раздачи статики
 FROM nginx:alpine
 
-# Копирование собранного проекта в директорию nginx
+# Копирование кастомной конфигурации Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Копирование собранного приложения в директорию Nginx
+COPY --from=build /app/build /usr/share/nginx/html
 
 # Открытие порта 80 для доступа к приложению
 EXPOSE 80
 
-# Запуск nginx в фоновом режиме
+# Запуск Nginx
 CMD ["nginx", "-g", "daemon off;"]
